@@ -1,0 +1,83 @@
+<div class="container py-5 text-center">
+  <div class="card">
+    <div class="card-body">
+      <img src="assets/elon_musk.png" class="rounded-circle" height="150">
+      <h2 class="mt-2 fw-bolder">Spend Elon Musk Money</h2>
+    </div>
+  </div>
+  <div class="card text-white bg-success mt-3 sticky-top">
+    <div class="card-body">
+      <h2> {{getCurrentWealth() | currency :'USD' }}</h2>
+    </div>
+  </div>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3 mt-3">
+    @for (item of items;track item){
+      <div class="col">
+        <div class="card">
+          <div class="card-body">
+            <img src="assets/items/{{item.image}}" height="100" alt="{{item.name}}">
+            <h5 class="mt-2">{{item.name}}</h5>
+            <p class="text-success">{{item.price |currency:'USD'}}</p>
+            <div class="row">
+              <div class="col">
+                <button class="btn btn-danger"
+                        [disabled]="item.soldCount==0"
+                        (click)="sell($index)">
+                  Sell
+                </button>
+              </div>
+              <div class="col">
+                <input type="number" class="form-control text-center" min="0" [(ngModel)]="item.soldCount">
+              </div>
+              <div class="col">
+                <button class="btn btn-success"
+                  (click)="purchase($index)"
+                  [disabled]="getCurrentWealth() < item.price"
+                >
+                  Buy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+  @if(getTotalSpending()>0){
+    <div class="card mt-3">
+      <div class="card-body">
+        <h3 class="fw-bold">Your Receipt</h3>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Item</th>
+              <th>Count</th>
+              <th>Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for(item of items; track item){
+              @if(item.soldCount>0){
+                <tr>
+                  <td>{{item.name}}</td>
+                  <td>{{item.soldCount}}</td>
+                  <td class="text-success">{{item.price * item.soldCount | currency:'USD'}}</td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+        <h4>Total : <span class="text-success">{{getTotalSpending() | currency:'USD'}}</span></h4>
+      </div>
+    </div>
+  }
+</div>
+
+<p class="text-secondary w-100 text-center">
+  <small>
+    Built with Angular 17 & Bootstrap 5 by
+    <a href="https://www.linkedin.com/in/manarbelkacem" target="_blank">
+      Manar Belkacem
+    </a>
+  </small>
+</p>
